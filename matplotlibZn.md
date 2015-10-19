@@ -1,0 +1,36 @@
+layout: post
+title: 解决matplotlib中文显示问题
+tags: [Python,matplotlib]
+filename: matplotlibZn
+date: 2015-10-09 22:06:10
+keywords: Python,matplotlib
+description:
+---
+最近在学机器学习，利用Python的matplotlib画图，但是无法显示中文。<!--more-->
+先说一下我的软件工作环境：
+　　　　　　　　　　　　系统：Windows 10 64位
+　　　　　　　　　　　　软件：Python 2.7
+网上google了很多解决方案，要么是python版本不对，要么是系统原因，当然还有一些其它未知因素，总之都不能解决中文显示问题。后来竟然在一篇解决python 3中文显示的文章中，找到了python 2.7中matplotlib中文显示问题的解决方案，方法如下：
+```python
+myfont = matplotlib.font_manager.FontProperties(fname='C:/Windows/Fonts/msyh.ttc')
+```
+在用matplotlib画图前，先定义如上字体，然后再使用到中文时指定该字体即可。<font color="red"><strong>事实上，网上有一种类似的方法，也是调用系统本地的字体文件，它调用的是'C:/Windows/Fonts/msyh.ttf'文件，但是我发现它对我现在的工作环境是无效的，而'C:/Windows/Fonts/msyh.ttc'确实有效的。所以利用'msyh.ttf'方法无效的同学可以把文件改为'msyh.ttc'试一试。因为思路相同，大家千万要分清，它们是两种不同的方法。另外，经测试，改成'simsun.ttc'，中文也是可以正常显示的。所以，我推测，我现在系统的字体文件是.tcc格式而非.ttf，大家也可以尝试改成系统其它的.ttc。</strong></font>具体的用法大家可以看一下下面的例子：
+```python
+from pylab import *  
+myfont = matplotlib.font_manager.FontProperties(fname='C:/Windows/Fonts/msyh.ttc')
+t = arange(-pi, pi, 0.01)  
+y = sin(t)
+figure(figsize=(12,9))
+scatter(t, y)  
+title(u'这里写的是中文',fontproperties=myfont) #指定字体  
+xlabel(u'X坐标',fontproperties=myfont)  
+ylabel(u'Y坐标',fontproperties=myfont)  
+legend([u'图例'],prop=myfont)
+```
+显示效果如下图所示：
+<img src="{%python%}2015-10-9-matplotlibZn.png" alt=""></img>
+首先我们先定义了myfont，然后在使用时将字体设置为myfont即可(别忘了在中文前要加上u)。很多很多情况都是通过fontproperties=myfont设置字体。这让我一度以为所有的中文设置都是通过fontproperties=myfont方式，结果发现在设置legend时出错，后来查看函数的说明才知道legend通过prop设置字体。所以，想要在图例中显示中文的小伙伴一定注意。
+
+参考文章:*http://my.oschina.net/lenglingx/blog/393571*
+
+原创文章如转载，请注明本文链接:<http://www.cognize.me/2015/10/09/{{ filename }}>

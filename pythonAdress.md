@@ -1,0 +1,143 @@
+layout: post
+title: 简明python教程中地址簿程序的代码实现
+tags: [Python]
+filename: pythonAdress
+date: 2015-09-22 21:28:01
+keywords: Python
+description:
+---
+在《简明python教程》中，作者为我们留了一个问题，即设计一个地址簿程序，改程序可以对人的地址等信息进行编辑，具体编辑内容包括对联系人信息的增删改查。我自己写了个实现的小程序，不足之处，希望各位指明，谢谢。<!--more-->
+源码如下：
+```python
+#!/usr/bin/env python
+# encoding: utf-8
+
+import os
+import cPickle as p
+
+class adress:
+    filePath='adress.txt'
+    adressList={}
+	
+    def __init__(self):
+        if os.path.exists(self.filePath):
+            f=file(self.filePath)
+            self.adressList=p.load(f)
+            f.close()
+			
+    def save(self):
+        f=file(self.filePath,'w')
+        p.dump(self.adressList,f)
+        f.close()
+		
+    def isExist(self,name):
+        if name in self.adressList:
+            return True
+        else:
+            return False
+			
+    def add(self,name,phone,adress):
+        self.adressList[name]=[phone,adress]
+        self.save()
+        self.search(name)
+        print 'Add successfully!!!'
+		
+    def delete(self,name):
+        if name in self.adressList:
+            del self.adressList[name]
+            print 'Delete successfully!!!'
+            self.save()
+        else:
+            print 'The person you input is not exist in adressList'
+			
+    def modify(self,name,phone,adress):
+        self.adressList[name]=[phone,adress]
+        self.save()
+        self.search(name)
+        print 'Modify successfully!!!'
+		
+    def search(self,name):
+        if name in self.adressList:
+            print 'name:%s ,phone:%s ,adress:%s '%(name,self.adressList[name][0],self.adressList[name][1])
+        else:
+            print 'The person you input is not exist'
+			
+    def show(self):
+        print 'name    phone      adress'
+        for name,info in self.adressList.items():
+            print name,info[0],info[1]
+			
+    def run(self):
+            while True:
+                command=raw_input("please input command(add/del/modify/search/show):")
+                if command=='add':
+                    while True:
+                        name=raw_input('please input name you wanna add:')
+                        if not ad.isExist(name):
+                            phone=raw_input('please input the phone of %s:'%(name))
+                            adress=raw_input('please input the adress of %s:'%(name))
+                            ad.add(name,phone,adress)
+                        else:
+                            print 'The person you input has exist.'
+                        flag=raw_input('Do you want to continue to add?(y/n):')
+                        if flag=='y' or flag=='Y':
+                            continue
+                        break
+                elif command=='del':
+                    while True:
+                        name=raw_input('please input name you wanna delete:')
+                        ad.delete(name)
+                        flag=raw_input('Do you want to continue to delete?(y/n):')
+                        if flag=='y' or flag=='Y':
+                            continue
+                        break
+                elif command=='modify':
+                    while True:
+                        name=raw_input('Please input name you wanna modify:')
+                        if ad.isExist(name):
+                            phone=raw_input('please input the phone of %s:'%(name))
+                            if phone=='':
+                                phone=ad.adressList[name][0]
+                            adress=raw_input('please input the adress of %s:'%(name))
+                            if adress=='':
+                                adress=ad.adressList[name][1]
+                            ad.modify(name,phone,adress)
+                        else:
+                            print 'The person you input is not exist.'
+                        flag=raw_input('Do you want to continue to modify?(y/n):')
+                        if flag=='y' or flag=='Y':
+                            continue
+                        break
+                elif command=='search':
+                    while True:
+                        name=raw_input('Please input name you manna search:')
+                        ad.search(name)
+                        flag=raw_input('Do you want to continue search?(y/n):')
+                        if flag=='y' or flag=="Y":
+                            continue
+                        break
+                elif command=='show':
+                    ad.show()
+                else:
+                    print 'wrong command.'
+                flag=raw_input('Do you wanna continue?(y/n):')
+                if flag=='y' or flag=='Y':
+                    continue
+                break
+
+
+ad=adress()
+ad.run()
+```
+大体的思路是：
+1.定义一个地址簿类，所有的操作都由该类去实现；
+2.定义两个公共变量filepath和adressList，前者用来存储地址文件路径，后缀存储地址簿内容；
+3.程序运行时先通过读取地址文件获得已经存在的内容（如果没有，则创建之）；
+4.程序的基本操作就是对联系人信息的增删改查，每次操作完立刻保存到地址文件里；
+5.因为用户可能不止要操作一个联系人信息，所以通过while让用户可以更方便的联系操作；
+这里，有两点说明：
+1.其实并不一定要每次操作都保存到文件，可以等用户在退出程序时一次性保存到文件，这样效率更高，但是如果用户在这期间输入了很多数据，突然出现的不可预知的情况，导致程序崩溃，会丢掉很多信息；
+2.修改操作比其它操作多一些代码是因为先进行了判断该name是否存在，如果存在才允许用户输入phone、adress信息，如果等到所有信息都输入完才检查name是否存在，可能会出现用户输入了name、phone、adress之后才发现输入的是无效值，浪费了更多的时间。
+3.因为联系人其实可以有很多信息，大家可以在name、phone、adress的基础上按需补充。
+
+原创文章如转载，请注明本文链接:<http://www.cognize.me/2015/09/22/{{ filename }}>
