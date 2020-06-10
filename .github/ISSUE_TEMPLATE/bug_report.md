@@ -1,6 +1,6 @@
 ---
-name: Bug report
-about: Bug申报
+name: Bug报修
+about: 向程序开发者申报bug
 title: ''
 labels: bug
 assignees: ''
