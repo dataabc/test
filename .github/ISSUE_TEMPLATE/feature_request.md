@@ -1,6 +1,6 @@
 ---
-name: 需要新的功能
-about: 有新需求，建议开发新功能
+name: 新需求或建议
+about: 建议开发新功能，或虽然没有新需求但对本项目有其它建议
 title: ''
 labels: 'feature'
 assignees: ''
