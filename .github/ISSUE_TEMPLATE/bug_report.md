@@ -2,10 +2,11 @@
 name: Bug report
 about: Bug申报
 title: ''
-labels: 'bug'
+labels: bug
 assignees: ''
 
 ---
+
 |  问题描述   | 您的答案  |
 |  ----  | ----  |
 | 爬取任意微博都会复现此bug吗（是/否）：  |  |
