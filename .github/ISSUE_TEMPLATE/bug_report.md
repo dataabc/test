@@ -1,8 +1,8 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: bug处理
 title: ''
-labels: 'Bug'
+labels: 'bug'
 assignees: ''
 
 ---
