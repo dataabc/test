@@ -3,5 +3,3 @@
 
 def test():
     print('hello world')
-    pass
-    assert (1, 2, 3) == (1, 2, 3)
